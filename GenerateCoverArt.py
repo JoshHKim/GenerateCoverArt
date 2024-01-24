@@ -1,14 +1,14 @@
 from openai import OpenAI
-import string 
-import time 
 import re 
 import urllib.request
+import requests
 from openai import OpenAI
 from dotenv import load_dotenv
+import os
+from pathlib import Path
+from PIL import Image
 
-load_dotenv()
-
-def lyrics(artist,song): 
+def getLyrics(artist,song): 
     artist = artist.lower() 
     song = song.lower() 
     artist = re.sub('[^A-Za-z0-9]+', "", artist) 
@@ -28,20 +28,35 @@ def lyrics(artist,song):
         return filter_lyrics
 
 
+def generateImage(title, lyrics):
+    load_dotenv()
+    client = OpenAI()
+    
+    path_to_dir = os.path.dirname(os.path.abspath(__file__))
+    path_to_assets=os.path.join(path_to_dir, "assets")
+    if not os.path.exists(path_to_assets):
+        os.makedirs(path_to_assets)
+    
+    response = client.images.generate(
+        model="dall-e-3",
+        prompt="create an album cover following these rules: Focus on specific, visually representable elements. Describe actions and scenarios rather than abstract concepts. Avoid ambiguous language that could be interpreted as including text. based on the following lyrics:" + lyrics,
+        size="1024x1024",
+        quality="standard",
+        n=1,
+    )
 
-#artist = input("Enter an artist's name: ")
-#title = input("Enter a song name: ")
-song_lyrics=lyrics("coldplay", "vivalavida")
+    image_url = response.data[0].url
+    path_to_img = os.path.join(path_to_assets, title+'.jpg')
 
-client = OpenAI()
+    img_data = requests.get(image_url).content
+    with open(path_to_img, 'wb') as handler:
+        handler.write(img_data)
+    
+    im = Image.open(path_to_img)
+    im.show()
 
-response = client.images.generate(
-    model="dall-e-3",
-    prompt="create an album cover based on the following lyrics:" + song_lyrics,
-    size="1024x1024",
-    quality="standard",
-    n=1,
-)
+def imageFromSong(artist, title):
+    song_lyrics=getLyrics(artist, title)
+    generateImage(title, song_lyrics)
 
-image_url = response.data[0].url
-print(image_url)
+
