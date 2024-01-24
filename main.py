@@ -1,24 +1,27 @@
 from tkinter import *
+from customtkinter import *
 import GenerateCoverArt
 
-root = Tk()
+root = CTk()
 
 root.title("GenerateCoverArt")
-root.geometry('320x200+0+0')
+root.geometry('350x250+0+0')
 root.grid_rowconfigure(0, weight=1)
 root.grid_columnconfigure(0, weight=1)
 
-lbl = Label(root, text = "Generate an image based on the lyrics of your favorite song!")
+set_appearance_mode("dark")
+
+lbl = CTkLabel(master=root, text = "Generate an image based on the lyrics of your favorite song!")
 lbl.grid()
 
-titlePrompt = Label(root, text = "Enter the title of your song")
+titlePrompt = CTkLabel(root, text = "Enter the title of your song")
 titlePrompt.grid(column=0, row=1)
-title = Entry(root, width=20)
+title = CTkEntry(root)
 title.grid(column =0, row =2)
 
-authorPrompt = Label(root, text = "Enter the author of your song")
+authorPrompt = CTkLabel(root, text = "Enter the author of your song")
 authorPrompt.grid(column=0, row=3)
-author = Entry(root, width=20)
+author = CTkEntry(root)
 author.grid(column =0, row =4)
  
 
@@ -27,8 +30,9 @@ def clicked():
     clean_title=''.join(letter for letter in title.get() if letter.isalnum())
     GenerateCoverArt.imageFromSong(clean_author, clean_title)
  
-
-btn = Button(root, text = "Generate Image" , fg = "red", command=clicked)
+spacing = CTkLabel(root, text = "")
+spacing.grid(column=0, row=5)
+btn = CTkButton(master=root, text = "Generate Image", corner_radius=32, command=clicked)
 
 btn.grid(column=0, row=6)
 
