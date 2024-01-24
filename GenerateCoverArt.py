@@ -1,4 +1,3 @@
-from openai import OpenAI
 import re 
 import urllib.request
 import requests

@@ -8,12 +8,6 @@ root.geometry('320x200+0+0')
 root.grid_rowconfigure(0, weight=1)
 root.grid_columnconfigure(0, weight=1)
 
-# menu = Menu(root)
-# item = Menu(menu)
-# item.add_command(label='New')
-# menu.add_cascade(label='File', menu=item)
-# root.config(menu=menu)
-
 lbl = Label(root, text = "Generate an image based on the lyrics of your favorite song!")
 lbl.grid()
 
@@ -33,10 +27,9 @@ def clicked():
     clean_title=''.join(letter for letter in title.get() if letter.isalnum())
     GenerateCoverArt.imageFromSong(clean_author, clean_title)
  
-# button widget with red color text inside
-btn = Button(root, text = "Generate Image" ,
-             fg = "red", command=clicked)
-# Set Button Grid
+
+btn = Button(root, text = "Generate Image" , fg = "red", command=clicked)
+
 btn.grid(column=0, row=6)
 
 root.mainloop()
